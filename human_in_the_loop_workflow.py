@@ -17,7 +17,7 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import interrupt, Command
 
 
-# ---------- 1. Define graph state ----------
+# ---------- 1. Define graph state  ---------------------
 
 class State(TypedDict, total=False):
     task: str
