@@ -10,15 +10,14 @@ Run:
     python human_in_the_loop_workflow.py
 """
 
-from typing_extensions import TypedDict
-from typing import Dict, Any
+from typing import TypedDict, Dict, Any
 
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import interrupt, Command
 
 
-# ---------- 1. Define graph state ----------
+# ---------- 1. Define graph state  ---------------------
 
 class State(TypedDict, total=False):
     task: str
