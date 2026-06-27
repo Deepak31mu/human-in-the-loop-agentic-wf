@@ -1,5 +1,5 @@
 """
-human_in_loop_graph.py
+human_in_the_loop_workflow.py
 
 Minimal LangGraph example with:
 - State graph
@@ -7,7 +7,7 @@ Minimal LangGraph example with:
 - Pause + resume using Command(resume=...)
 
 Run:
-    python human_in_loop_graph.py
+    python human_in_the_loop_workflow.py
 """
 
 from typing_extensions import TypedDict
@@ -30,9 +30,7 @@ class State(TypedDict, total=False):
 # ---------- 2. Define nodes ----------
 
 def analyze_node(state: State) -> Dict[str, Any]:
-    """
-    Fake analysis step (an agent/LLM would normally do this).
-    """
+    """Fake analysis step (an agent/LLM would normally do this)."""
     task = state.get("task", "")
     analysis = f"Proposed action for task: {task}"
     print(f"[analyze_node] analysis = {analysis}")
@@ -40,10 +38,7 @@ def analyze_node(state: State) -> Dict[str, Any]:
 
 
 def human_node(state: State) -> Dict[str, Any]:
-    """
-    Human-in-the-loop node.
-    interrupt(...) pauses the graph and returns when we resume with Command(resume=...).
-    """
+    """Pauses the graph for human review; resumes when called with Command(resume=...)."""
     question = f"Approve this action?\n{state.get('analysis', '')}"
     payload = {
         "kind": "approval",
@@ -52,15 +47,13 @@ def human_node(state: State) -> Dict[str, Any]:
     }
 
     print("[human_node] Pausing for human input...")
-    decision = interrupt(payload)   # <-- graph stops here in the first run
+    decision = interrupt(payload)   # graph suspends here; resumes via Command(resume=...)
     print(f"[human_node] Resumed with decision: {decision}")
     return {"approval": decision}
 
 
 def execute_node(state: State) -> Dict[str, Any]:
-    """
-    Final execution node, uses the human decision.
-    """
+    """Executes, edits, or rejects the proposed action based on the human decision."""
     approval = state.get("approval", {}) or {}
     choice = approval.get("choice")
     print(f"[execute_node] choice = {choice}")
@@ -98,9 +91,7 @@ def build_graph():
 # ---------- 4. Simple CLI “human” interaction ----------
 
 def ask_human(question: str, options: list[str]) -> Dict[str, Any]:
-    """
-    Very simple console-based human input.
-    """
+    """Console-based human input for approve / reject / edit decisions."""
     print("\n================ HUMAN REVIEW ================")
     print(question)
     print(f"Options: {', '.join(options)}")
