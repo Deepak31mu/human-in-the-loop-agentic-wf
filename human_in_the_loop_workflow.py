@@ -62,6 +62,7 @@ def execute_node(state: State) -> Dict[str, Any]:
     elif choice == "edit":
         edited_text = approval.get("edited_text", "")
         result = f"Task executed with edits: {edited_text}"
+        
     else:
         result = "Task rejected by human."
 
